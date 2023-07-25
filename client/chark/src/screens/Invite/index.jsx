@@ -13,10 +13,18 @@ import TemplateItem from './TemplateItem';
 import Button from '../../components/Button';
 
 const TallyInvite = (props) => {
+  const notification = props.route?.params?.notification;
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { wm, ws } = useSocket();
   const { triggerInviteFetch } = useInvite();
+
+  useEffect(() => {
+    if (notification) {
+      props.navigation.navigate("TallyPreview", { ...notification });
+    }
+  }, [notification])
 
   useEffect(() => {
     if (ws) {
