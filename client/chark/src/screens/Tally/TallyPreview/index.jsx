@@ -8,6 +8,7 @@ import {
   Alert,
   Platform,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import { colors, keyServices } from '../../../config/constants';
@@ -20,7 +21,8 @@ import { fetchContracts, updateHoldCert } from '../../../services/tally';
 import CustomText from '../../../components/CustomText';
 import Button from '../../../components/Button';
 import Spinner from '../../../components/Spinner';
-import TallyEditView from '../TallyEditView';
+//import TallyEditView from '../TallyEditView';
+import TallyEditView from './TallyEdit';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { offerTally, acceptTally, refuseTally } from '../../../services/tally';
 import { createSignature, verifySignature } from '../../../utils/message-signature';
@@ -28,6 +30,9 @@ import { retrieveKey } from '../../../utils/keychain-store';
 import { GenerateKeysDialog } from './GenerateKeysDialog';
 import { UpdateHoldCert } from './UpdateHoldCert';
 import CenteredModal from '../../../components/CenteredModal';
+import OfferIcon from '../../../../assets/svg/tally_offer.svg';
+import AcceptIcon from '../../../../assets/svg/tally_accept.svg';
+import RejectIcon from '../../../../assets/svg/tally_reject.svg';
 
 const TallyPreview = (props) => {
   const { tally_seq, tally_ent } = props.route?.params ?? {};
@@ -88,15 +93,15 @@ const TallyPreview = (props) => {
   const onShare = () => {
     const hold_limit = tally?.hold_terms?.limit;
     const part_limit = tally?.part_terms?.limit;
-    if (
-      typeof hold_limit === 'undefined' || hold_limit === null ||
-      typeof part_limit === 'undefined' || part_limit === null
-    ) {
-      return Toast.show({
-        type: 'error',
-        text1: 'Please add hold terms and part terms before sharing tally.',
-      });
-    }
+    //if (
+      //typeof hold_limit === 'undefined' || hold_limit === null ||
+      //typeof part_limit === 'undefined' || part_limit === null
+    //) {
+      //return Toast.show({
+        //type: 'error',
+        //text1: 'Please add hold terms and part terms before sharing tally.',
+      //});
+    //}
 
     return props.navigation.navigate(
       "TallyShare",
@@ -352,7 +357,7 @@ const TallyPreview = (props) => {
 
         <View style={styles.actions}>
           <CustomButton
-            show={canUpdate}
+            show={false ?? canUpdate}
             title={updating ? 'Updating...' : 'Update'}
             disabled={updating}
             onPress={onUpdate}
@@ -365,13 +370,9 @@ const TallyPreview = (props) => {
             style={styles.shareButton}
           />
 
-          <CustomButton
-            show={canOffer}
-            title="Offer"
-            onPress={onOffer}
-            style={styles.shareButton}
-            testID="offerBtn"
-          />
+          <CustomAction show={canOffer} onPress={onOffer} testID="offerBtn">
+            <OfferIcon />
+          </CustomAction>
 
           <CustomButton
             show={canAccept}
@@ -413,6 +414,19 @@ const TallyPreview = (props) => {
   )
 }
 
+function CustomAction(props) {
+  if (!props.show) return null;
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={props.onPress}
+      testID={props?.testID}
+    >
+      {props.children}
+    </TouchableWithoutFeedback>
+  )
+}
+
 function CustomButton(props) {
   if (!props.show) return null;
 
@@ -430,10 +444,12 @@ function CustomButton(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
+    paddingHorizontal: 10,
   },
   contentContainer: {
-    backgroundColor: 'white',
-    margin: 10,
+    backgroundColor: colors.white,
+    //margin: 10,
     padding: 10,
   },
   toolbar: {
@@ -470,10 +486,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   actions: {
-    margin: 10,
+    //margin: 10,
     flexDirection: 'row',
+    justifyContent:'space-between',
     backgroundColor: 'white',
-    padding: 10,
+    padding: 20,
   }
 })
 

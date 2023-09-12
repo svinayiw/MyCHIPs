@@ -54,7 +54,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: '500',
+    color: colors.gray300,
+    fontFamily: 'inter',
   },
 });
 

@@ -76,7 +76,7 @@ const DraftTally = (props) => {
       text1: 'Processing tally ticket...',
     });
 
-    wm.request('_process_tally', 'select', spec, (data, err) => {
+    wm.request('_process_tally_process' + Math.random(), 'select', spec, (data, err) => {
       if (err) {
         Toast.show({
           type: 'error',
