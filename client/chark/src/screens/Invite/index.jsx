@@ -15,6 +15,9 @@ import BottomSheetModal from '../../components/BottomSheetModal';
 import CommentContent from './CommentContent';
 import LimitContent from './LimitContent';
 import SuccessContent from './SuccessContent';
+import { useDispatch } from 'react-redux';
+import { inviteSlice } from '../../redux/reducers/inviteSlices';
+
 
 const Header_Height = 160;
 
@@ -55,6 +58,8 @@ const TallyInvite = (props) => {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [tallyItem, setTallyItem] = useState({});
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (ws) {
@@ -139,6 +144,8 @@ const TallyInvite = (props) => {
         part_cert: el.part_cert,
         hold_cert: el.hold_cert,
       }));
+
+      dispatch(inviteSlice.actions.saveInvites(_data));
 
       setData(_data);
       setLoading(false);
