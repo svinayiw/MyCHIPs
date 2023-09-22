@@ -15,9 +15,6 @@ import { localStorage } from '../../config/constants';
 import TallyItem from './TallyItem';
 import TallyHeader from './TallyHeader';
 
-import { useDispatch } from 'react-redux';
-import { talliesSlice } from '../../redux/reducers/talliesSlices';
-
 const Tally = (props) => {
   const { wm, ws } = useSocket();
   const { user } = useCurrentUser();
@@ -28,8 +25,6 @@ const Tally = (props) => {
   const [tallies, setTallies] = useState([]);
   const [conversionRate, setConversionRate] = useState(0);
   const [imagesByDigest, setImagesByDigest] = useState({})  // will be as {[digest]: 'base64'}
-
-  const dispatch = useDispatch()
 
   const currencyCode = preferredCurrency.code;
 
@@ -92,9 +87,6 @@ const Tally = (props) => {
             });
           }
         }
-
-
-        dispatch(talliesSlice.actions.saveTallies(data));
 
         // Fetch images by digest
         fetchImagesByDigest(wm, hashes, setImagesByDigest).catch(console.log)

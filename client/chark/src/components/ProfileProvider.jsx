@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { NativeModules } from 'react-native';
-import {useDispatch} from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import ProfileContext from '../context/ProfileContext';
@@ -9,9 +8,6 @@ import { getPersonal, getCurrency, getCountry, getFile } from '../services/profi
 
 import { languageMap } from '../utils/language';
 import useSocket from '../hooks/useSocket';
-import { profileSlice } from '../redux/reducers/profileSlices';
-import { currencySlice } from '../redux/reducers/currencySlices';
-
 
 const deviceLanguage =
   Platform.OS === 'ios'
@@ -22,8 +18,6 @@ const ProfileProvider = ({ children }) => {
   const { user } = useCurrentUser();
   const user_ent = user?.curr_eid;
   const { wm } = useSocket();
-
-  const dispatch = useDispatch()
 
   const [avatar, setAvatar] = useState(null)
 
@@ -100,32 +94,20 @@ const ProfileProvider = ({ children }) => {
     getPersonal(wm, user_ent).then(data => {
       setPersonal(data);
 
-
-
-      dispatch(profileSlice.actions.saveProfile(data));
-
       return data;
     })
       .then((_personal) => getCountry(wm, _personal.country))
       .then(country => {
-
-        console.log(country)
         if (!country) {
           return;
         }
 
         getCurrency(wm, country.cur_code).then(currency => {
           if (currency) {
-
-   
             setPreferredCurrency({
               name: currency.cur_name,
               code: currency.cur_code,
             })
-
-            console.log(currency)
-
-            dispatch(currencySlice.actions.saveCurrency(currency));
           }
         })
       })
